@@ -1,0 +1,164 @@
+
+
+
+programm
+    : function
+    | programm function
+    ;
+
+function
+    : TODO
+    ;
+
+function_body
+    : BRACKET_OPEN statement_list  BRACKET_CLOSE
+    | BRACKET_OPEN declaration_list statement_list BRACKET_CLOSE
+    ;
+
+declaration_list
+    : declaration SEMICOLON
+    | declaration_list declaration SEMICOLON
+    ;
+
+declaration
+    : TODO
+    ;
+
+parameter_list
+    : TODOs
+    |
+    ;
+
+var_type
+    : TODO
+    ;
+
+statement_list
+    : statement
+    | statement_list statement
+    ;
+
+statement
+    : matched_statement
+    | unmatched_statement
+    ;
+
+matched_statement
+    : IF PARENTHESIS_OPEN assignment PARENTHESIS_CLOSE matched_statement ELSE matched_statement
+    | assignment SEMICOLON
+    | RETURN SEMICOLON
+    | RETURN assignment SEMICOLON
+    | WHILE PARENTHESIS_OPEN assignment PARENTHESIS_CLOSE matched_statement
+    | DO statement WHILE PARENTHESIS_OPEN assignment PARENTHESIS_CLOSE SEMICOLON
+    | BRACKET_OPEN statement_list BRACKET_CLOSE
+    | BRACKET_OPEN BRACKET_CLOSE
+    ;
+
+unmatched_statement
+    : IF PARENTHESIS_OPEN assignment PARENTHESIS_CLOSE statement
+    | WHILE PARENTHESIS_OPEN assignment PARENTHESIS_CLOSE unmatched_statement
+    | IF PARENTHESIS_OPEN assignment PARENTHESIS_CLOSE matched_statement ELSE unmatched_statement
+    ;
+
+
+assignment
+    : expression
+    | id ASSIGN expression
+    ;
+
+expression
+//logischer ausdruck (id log ig|ausdruck log ausdruck)
+    : TODO
+    ;
+
+exp_list
+    : expression
+    | exp_list COMMA expression
+    ;
+
+id
+    : IDENTIFIER
+    ;
+
+
+
+
+
+---------------------------------------------------------------
+programm
+    : function
+    | programm function
+    ;
+
+function
+    : TODO
+    ;
+
+function_body
+    : BRACES_OPEN statement_list  BRACES_CLOSE
+    | BRACES_OPEN declaration_list statement_list BRACES_CLOSE
+    ;
+
+declaration_list
+    : declaration SEMICOLON
+    | declaration_list declaration SEMICOLON
+    ;
+
+declaration
+    : TODO
+    ;
+
+parameter_list
+    : TODOs
+    |
+    ;
+
+var_type
+    : TODO
+    ;
+
+statement_list
+    : statement
+    | statement_list statement
+    ;
+
+statement
+    : matched_statement
+    | unmatched_statement
+    ;
+
+matched_statement
+    : IF PARENTHESES_OPEN assignment PARENTHESES_CLOSE matched_statement ELSE matched_statement
+    | assignment SEMICOLON
+    | RETURN SEMICOLON
+    | RETURN assignment SEMICOLON
+    | WHILE PARENTHESES_OPEN assignment PARENTHESES_CLOSE matched_statement
+    | DO statement WHILE PARENTHESES_OPEN assignment PARENTHESES_CLOSE SEMICOLON
+    | BRACES_OPEN statement_list BRACES_CLOSE
+    | BRACES_OPEN BRACES_CLOSE
+    ;
+
+unmatched_statement
+    : IF PARENTHESES_OPEN assignment PARENTHESES_CLOSE statement
+    | WHILE PARENTHESES_OPEN assignment PARENTHESES_CLOSE unmatched_statement
+    | IF PARENTHESES_OPEN assignment PARENTHESES_CLOSE matched_statement ELSE unmatched_statement
+    ;
+
+
+assignment
+    : expression
+    | id ASSIGN expression
+    ;
+
+expression
+    : TODO
+    ;
+
+exp_list
+    : expression
+    | exp_list COMMA expression
+    ;
+
+id
+    : IDENTIFIER
+    ;
