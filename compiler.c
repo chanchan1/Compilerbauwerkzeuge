@@ -60,7 +60,6 @@ void addSymboltableEntry (symtabEntry * Symboltable,
   
   //allocates the memory for the new symtabEntry
   newSymtabEntry->name = (char *) malloc (strlen(name) +1);
-  
   strcpy(newSymtabEntry->name,name);
   newSymtabEntry->type = type;
   newSymtabEntry->internalType = internalType;
@@ -71,7 +70,7 @@ void addSymboltableEntry (symtabEntry * Symboltable,
   newSymtabEntry->next = 0;
   
   
-  if (!Symboltable)
+  if (!theSymboltable)
   {
     //there is no entry in the Symboltable
     theSymboltable = newSymtabEntry;
@@ -87,6 +86,27 @@ void addSymboltableEntry (symtabEntry * Symboltable,
     }
     symtabHelp->next = newSymtabEntry;
   }
+}
+
+symtabEntry * findEntry( char * name){
+
+symtabEntry * symtabHelp = theSymboltable;
+    
+	do
+    {
+
+	if(strcmp(symtabHelp->name,name)==0){
+	return symtabHelp;}
+	
+      //walks to the last entry of Symboltable
+      symtabHelp = symtabHelp->next;
+    }while(symtabHelp->next);
+	
+	if(strcmp(symtabHelp->name,name)==0){
+	return symtabHelp;}
+	
+	return 0;
+	
 }
 
 //puts the printout for a given SymbolEntrytype to the given string

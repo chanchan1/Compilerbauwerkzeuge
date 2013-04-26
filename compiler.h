@@ -21,6 +21,7 @@ typedef struct a_symtabEntry {
 
 // Functions to manage symbol table
 void  addSymboltableEntry(symtabEntry * Symboltable, char * name, symtabEntryType type, symtabEntryType internalType, int offset, int line, symtabEntry * vater, int parameter);
+symtabEntry * findEntry(char * name);
 void  getSymbolTypePrintout(symtabEntryType type, char * writeIn);
 void  writeSymboltable (symtabEntry * Symboltable, FILE * outputFile);
 

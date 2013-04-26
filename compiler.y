@@ -5,6 +5,8 @@
 #include "compiler.h" 
 #include <stdio.h>
 
+symtabEntry * globaleVariable;
+
 %}
 //Bison declarations
 
@@ -51,9 +53,9 @@ symtabEntryType type;
 
 }
 
-%type<integer> NUMBER FRACTIONAL_NUMBER number
-%type<string> id ID   
-%type<type> var_type expression assignment declaration
+%type<integer> NUMBER FRACTIONAL_NUMBER number parameter_list
+%type<string> id ID  expression assignment 
+%type<type> var_type declaration return_value
 
 
 %%    // grammar rules
@@ -67,14 +69,40 @@ programm
     ;
 
 function_declaration
-	: return_value  id  PARENTHESIS_OPEN  parameter_list  PARENTHESIS_CLOSE SEMICOLON
+	: return_value  id  PARENTHESIS_OPEN  parameter_list  PARENTHESIS_CLOSE SEMICOLON {
+	symtabEntryType type;
+	if($1==NOP){type=PROC;}
+		else{type=FUNC;}
+	addSymboltableEntry ( 0, $2,  type,  $1,
+              0, 0, 0, $4);}
 	;
 	
 function
-    : return_value  id  PARENTHESIS_OPEN  parameter_list  PARENTHESIS_CLOSE  function_body
+    : return_value  id PARENTHESIS_OPEN  parameter_list  PARENTHESIS_CLOSE  function_body { 
+				
+				if(strcmp($2,"main")==0){addSymboltableEntry ( 0, $2,  PROG,  $1,
+              0, 0, 0, $4);
+			  }
+			  else {
+			  symtabEntry * existing;
+			  
+				existing = findEntry( $2);
+
+			  if(!existing){
+					yyerror("No prior declaration!");
+					return 1;
+				}
+				else{
+					if(existing->parameter!=$4){
+					yyerror("Wrong number of parameters!");
+					return 1;
+					}
+				}
+			  }
+			  globaleVariable=findEntry( $2);}
     | return_value  id  PARENTHESIS_OPEN  VOID  PARENTHESIS_CLOSE  function_body
     ;
-
+	
 function_body
     : BRACKET_OPEN statement_list  BRACKET_CLOSE
     | BRACKET_OPEN declaration_list statement_list BRACKET_CLOSE
@@ -90,13 +118,13 @@ declaration
     ;
 
 parameter_list
-    : var_type  id
-    | parameter_list COMMA  var_type  id
-	|
+    : var_type  id {$$=1}
+    | parameter_list COMMA  var_type  id {$$=$1+1}
+	| {$$=0}
     ;
 return_value
 	: var_type
-	| VOID
+	| VOID {$$=NOP;}
 	;
 	
 var_type
@@ -138,7 +166,7 @@ assignment
     ;
 
 expression
-    : IN_DECREMENT expression{$$=$2}
+    : IN_DECREMENT expression{$$="h1";}
 	| expression  LOGIC_AND  expression
 	| expression  LOGIC_OR  expression
 	| expression  NOTEQUAL  expression
@@ -148,8 +176,8 @@ expression
 	| expression  ADD_GROUP  expression
 	| expression  MULT_GROUP  expression
 	| NEGATE  expression{$$=$2}
-	| PARENTHESIS_OPEN  expression  PARENTHESIS_CLOSE
-	| number{$$=$1}
+	| PARENTHESIS_OPEN  expression  PARENTHESIS_CLOSE{$$="h1";}
+	| number{$$="h1";}
 	| id{$$=$1}
 	| id PARENTHESIS_OPEN exp_list PARENTHESIS_CLOSE 
     ;

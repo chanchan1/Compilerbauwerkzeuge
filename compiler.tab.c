@@ -74,10 +74,12 @@
 #include "compiler.h" 
 #include <stdio.h>
 
+symtabEntry * globaleVariable;
+
 
 
 /* Line 189 of yacc.c  */
-#line 81 "compiler.tab.c"
+#line 83 "compiler.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -147,7 +149,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 47 "compiler.y"
+#line 49 "compiler.y"
 
 int integer;
 char * string;
@@ -157,7 +159,7 @@ symtabEntryType type;
 
 
 /* Line 214 of yacc.c  */
-#line 161 "compiler.tab.c"
+#line 163 "compiler.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -169,7 +171,7 @@ symtabEntryType type;
 
 
 /* Line 264 of yacc.c  */
-#line 173 "compiler.tab.c"
+#line 175 "compiler.tab.c"
 
 #ifdef short
 # undef short
@@ -479,12 +481,12 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    62,    62,    65,    66,    70,    74,    75,    79,    80,
-      84,    85,    89,    93,    94,    95,    98,    99,   103,   104,
-     108,   109,   113,   114,   118,   119,   120,   121,   122,   123,
-     124,   125,   129,   130,   131,   136,   137,   141,   142,   143,
-     144,   145,   146,   147,   148,   149,   150,   151,   152,   153,
-     154,   158,   159,   163,   164,   167
+       0,    64,    64,    67,    68,    72,    81,   103,   107,   108,
+     112,   113,   117,   121,   122,   123,   126,   127,   131,   132,
+     136,   137,   141,   142,   146,   147,   148,   149,   150,   151,
+     152,   153,   157,   158,   159,   164,   165,   169,   170,   171,
+     172,   173,   174,   175,   176,   177,   178,   179,   180,   181,
+     182,   186,   187,   191,   192,   195
 };
 #endif
 
@@ -1486,77 +1488,152 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 62 "compiler.y"
+#line 64 "compiler.y"
     {printf("EVERYTHING COMPILED\n");;}
+    break;
+
+  case 5:
+
+/* Line 1455 of yacc.c  */
+#line 72 "compiler.y"
+    {
+	symtabEntryType type;
+	if((yyvsp[(1) - (6)].type)==NOP){type=PROC;}
+		else{type=FUNC;}
+	addSymboltableEntry ( 0, (yyvsp[(2) - (6)].string),  type,  (yyvsp[(1) - (6)].type),
+              0, 0, 0, (yyvsp[(4) - (6)].integer));;}
+    break;
+
+  case 6:
+
+/* Line 1455 of yacc.c  */
+#line 81 "compiler.y"
+    { 
+				
+				if(strcmp((yyvsp[(2) - (6)].string),"main")==0){addSymboltableEntry ( 0, (yyvsp[(2) - (6)].string),  PROG,  (yyvsp[(1) - (6)].type),
+              0, 0, 0, (yyvsp[(4) - (6)].integer));
+			  }
+			  else {
+			  symtabEntry * existing;
+			  
+				existing = findEntry( (yyvsp[(2) - (6)].string));
+
+			  if(!existing){
+					yyerror("No prior declaration!");
+					return 1;
+				}
+				else{
+					if(existing->parameter!=(yyvsp[(4) - (6)].integer)){
+					yyerror("Wrong number of parameters!");
+					return 1;
+					}
+				}
+			  }
+			  globaleVariable=findEntry( (yyvsp[(2) - (6)].string));;}
+    break;
+
+  case 13:
+
+/* Line 1455 of yacc.c  */
+#line 121 "compiler.y"
+    {(yyval.integer)=1;}
+    break;
+
+  case 14:
+
+/* Line 1455 of yacc.c  */
+#line 122 "compiler.y"
+    {(yyval.integer)=(yyvsp[(1) - (4)].integer)+1;}
+    break;
+
+  case 15:
+
+/* Line 1455 of yacc.c  */
+#line 123 "compiler.y"
+    {(yyval.integer)=0;}
+    break;
+
+  case 17:
+
+/* Line 1455 of yacc.c  */
+#line 127 "compiler.y"
+    {(yyval.type)=NOP;;}
     break;
 
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 103 "compiler.y"
+#line 131 "compiler.y"
     {(yyval.type)=REAL;;}
     break;
 
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 104 "compiler.y"
+#line 132 "compiler.y"
     {(yyval.type)=INTEGER;;}
     break;
 
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 141 "compiler.y"
-    {(yyval.type)=(yyvsp[(2) - (2)].type);}
+#line 169 "compiler.y"
+    {(yyval.string)="h1";;}
     break;
 
   case 46:
 
 /* Line 1455 of yacc.c  */
-#line 150 "compiler.y"
-    {(yyval.type)=(yyvsp[(2) - (2)].type);}
+#line 178 "compiler.y"
+    {(yyval.string)=(yyvsp[(2) - (2)].string);}
+    break;
+
+  case 47:
+
+/* Line 1455 of yacc.c  */
+#line 179 "compiler.y"
+    {(yyval.string)="h1";;}
     break;
 
   case 48:
 
 /* Line 1455 of yacc.c  */
-#line 152 "compiler.y"
-    {(yyval.type)=(yyvsp[(1) - (1)].integer);}
+#line 180 "compiler.y"
+    {(yyval.string)="h1";;}
     break;
 
   case 49:
 
 /* Line 1455 of yacc.c  */
-#line 153 "compiler.y"
-    {(yyval.type)=(yyvsp[(1) - (1)].string);}
+#line 181 "compiler.y"
+    {(yyval.string)=(yyvsp[(1) - (1)].string);}
     break;
 
   case 53:
 
 /* Line 1455 of yacc.c  */
-#line 163 "compiler.y"
+#line 191 "compiler.y"
     {(yyval.integer)=INTEGER;;}
     break;
 
   case 54:
 
 /* Line 1455 of yacc.c  */
-#line 164 "compiler.y"
+#line 192 "compiler.y"
     {(yyval.integer)=REAL;;}
     break;
 
   case 55:
 
 /* Line 1455 of yacc.c  */
-#line 167 "compiler.y"
+#line 195 "compiler.y"
     {strcpy((yyval.string),(yyvsp[(1) - (1)].string));}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1560 "compiler.tab.c"
+#line 1637 "compiler.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1768,7 +1845,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 171 "compiler.y"
+#line 199 "compiler.y"
 
 
 //Epilogue
