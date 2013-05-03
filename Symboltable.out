@@ -3,12 +3,12 @@ SYMBOLS
 
 Name                Type    Int_Typ Offset/Size    Line    Index1    Index2    Parent          Parameter
 -------------------------------------------------------------------------------------------------------
-x                   Int     None              0       0         0         0 	None 		 1 
-y                   Int     None              0       0         0         0 	None 		 2 
 questionmark        Func    Real              0       0         0         0 	None 		 0 
+x                   Int     None              0       0         0         0 	questionmark 		 1 
+y                   Int     None              0       0         0         0 	questionmark 		 2 
+main                Prg     Int               0       0         0         0 	None 		 0 
 variable_1          Int     None              0       0         0         0 	None 		 0 
 variable_2          Int     None              0       0         0         0 	None 		 0 
 variable_3          Real    None              0       0         0         0 	None 		 0 
-main                Prg     Int               0       0         0         0 	None 		 0 
 result              Real    None              0       0         0         0 	None 		 0 
 

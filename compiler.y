@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 symtabEntry * globaleVariable;
+int istDeklaration=1;
 
 %}
 //Bison declarations
@@ -54,7 +55,7 @@ symtabEntryType type;
 }
 
 %type<integer> NUMBER FRACTIONAL_NUMBER number parameter_list
-%type<string> id ID  expression assignment
+%type<string> id ID  expression assignment part1
 %type<type> var_type declaration return_value
 
 
@@ -65,72 +66,47 @@ everything
 	
 programm
     : function 
-    | function_declaration programm function
+    | programm function
     ;
 
-function_declaration
-	: return_value  id part2 {
-	symtabEntryType type;
-	if($1==NOP){type=PROC;}
-		else{type=FUNC;}
-	addSymboltableEntry ($2,  type,  $1,
-              0, 0, 0, 0);
-	globaleVariable = findEntry($2);}
-	;
 	
-part2
-	:PARENTHESIS_OPEN  parameter_list  PARENTHESIS_CLOSE SEMICOLON{
-		globaleVariable =0;
+part1
+	: return_value id{
+	
+	 symtabEntry * existing = findEntry($2);
+	
+	if(!existing){
+		istDeklaration=1;
+		if(strcmp($2,"main")==0){
+					addSymboltableEntry ($2,  PROG,  $1,
+				  0, 0, 0, 0);
+				  }
+		else{
+				symtabEntryType type;
+			if($$==NOP){type=PROC;}
+				else{type=FUNC;}
+			globaleVariable = addSymboltableEntry ($2,  type,  $1,
+					  0, 0, 0, 0);
+				  }
+		}
+		else{
+		istDeklaration = 0;
+		}
+	$$ = $2;
 	}
 	;
 
-	
 function
-    : return_value  id PARENTHESIS_OPEN  parameter_list  PARENTHESIS_CLOSE  function_body { 
-				
-				if(strcmp($2,"main")==0){
-				addSymboltableEntry ($2,  PROG,  $1,
-              0, 0, 0, $4);
-			  }
-			  else {
-			  symtabEntry * existing;
-			  
-				existing = findEntry( $2);
-
-			  if(!existing){
-					yyerror("No prior declaration!");
-					return 1;
-				}
-				else{
-					if(existing->parameter!=$4){
-					yyerror("Wrong number of parameters!");
-					return 1;
-					}
-				}
-			  }
-			  globaleVariable =0;}
-    | return_value  id  PARENTHESIS_OPEN  VOID  PARENTHESIS_CLOSE  function_body{
-			
-			if(strcmp($2,"main")==0){
-				addSymboltableEntry ($2,  PROG,  $1,
-              0, 0, 0, 0);
-			  }
-			  else {
-			  symtabEntry * existing;
-			  
-				existing = findEntry( $2);
-
-			  if(!existing){
-					yyerror("No prior declaration!");
-					return 1;
-				}
-				else{
-					if(existing->parameter){
-					yyerror("Wrong number of parameters!");
-					return 1;
-					}
-				}
-			  }}
+	: part1 PARENTHESIS_OPEN  parameter_list  PARENTHESIS_CLOSE SEMICOLON {
+	 
+	globaleVariable =0;}
+	
+    | part1 PARENTHESIS_OPEN  parameter_list  PARENTHESIS_CLOSE  function_body { 
+			globaleVariable =0;				
+			}
+    | part1  PARENTHESIS_OPEN  VOID  PARENTHESIS_CLOSE  function_body{
+			globaleVariable =0;
+			}
     ;
 	
 function_body
@@ -164,34 +140,43 @@ declaration
 parameter_list
     : var_type  id {
 	
-			symtabEntry * existing;
-
-				existing = findEntry( $2);
-		
-			  if(existing){
-				break;
-				}
-				else
-				{
+			if(istDeklaration){
 				addSymboltableEntry ($2,  $1, NOP,0, 0, globaleVariable, 1);
-			  };
+				}
+			else{
+			symtabEntry * existing;
+			
+				existing = findEntry( $2);
+				if(!existing){
+					yyerror("wrong parameter name!");
+					return 1;
+				}
+				else if(existing->type!=$1){
+					yyerror("wrong parameter type!");
+					return 1;
+				}
+			}
+			
 			  $$=1}
     | parameter_list COMMA  var_type  id {
-	
-				symtabEntry * existing;
+			if(istDeklaration){
+				addSymboltableEntry ($4,  $3, NOP,0, 0, globaleVariable, $1+1);
+			  }
+			  else{
+			symtabEntry * existing;
 			
 				existing = findEntry( $4);
-
-			  if(existing){
-					break;
+				if(!existing){
+					yyerror("wrong parameter name!");
+					return 1;
 				}
-				else
-				{
-				addSymboltableEntry ($4,  $3, NOP,0, 0, globaleVariable, $1+1);
-			  };
+				else if(existing->type!=$3){
+					yyerror("wrong parameter type!");
+					return 1;
+				}
+			}
 			  $$=$1+1}
-	| {printf("3");;
-	$$=0}
+	| {$$=0}
     ;
 return_value
 	: var_type

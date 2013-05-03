@@ -46,7 +46,7 @@ void yyerror(char * str)
 }
 
 // This function adds a new entry to the symbol table
-void addSymboltableEntry (
+symtabEntry * addSymboltableEntry (
               char * name,
               symtabEntryType type,
               symtabEntryType internalType,
@@ -86,6 +86,7 @@ void addSymboltableEntry (
     }
     symtabHelp->next = newSymtabEntry;
   }
+  return newSymtabEntry;
 }
 
 symtabEntry * findEntry( char * name){
