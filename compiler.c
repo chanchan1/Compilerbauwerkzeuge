@@ -15,19 +15,19 @@ int main (void)
   
   
   //sample for a valid symboltable
-  addSymboltableEntry(theSymboltable,"If_Demo"  , PROG,     NOP, NOP, 18, 0, 0 );
-  addSymboltableEntry(theSymboltable,"wert"     , INTEGER,  NOP, NOP,  0, 0, 0 );
-  addSymboltableEntry(theSymboltable,"d"        , INTEGER,    NOP, NOP,  4, 0, 0 );
-  addSymboltableEntry(theSymboltable,"H0"       , BOOL,     NOP, NOP,  8, 0, 0 );
-  addSymboltableEntry(theSymboltable,"H1"       , BOOL,     NOP, NOP,  9, 0, 0 );
-  addSymboltableEntry(theSymboltable,"H2"       , BOOL,     NOP, NOP, 10, 0, 0 );
-  addSymboltableEntry(theSymboltable,"H3"       , BOOL,     NOP, NOP, 11, 0, 0 );
-  addSymboltableEntry(theSymboltable,"H4"       , BOOL,     NOP, NOP, 12, 0, 0 );
-  addSymboltableEntry(theSymboltable,"H5"       , BOOL,     NOP, NOP, 13, 0, 0 );
-  addSymboltableEntry(theSymboltable,"H6"       , BOOL,     NOP, NOP, 14, 0, 0 );
-  addSymboltableEntry(theSymboltable,"H7"       , BOOL,     NOP, NOP, 15, 0, 0 );
-  addSymboltableEntry(theSymboltable,"H8"       , BOOL,     NOP, NOP, 16, 0, 0 );
-  addSymboltableEntry(theSymboltable,"H9"       , BOOL,     NOP, NOP, 17, 0, 0 );
+  // addSymboltableEntry(theSymboltable,"If_Demo"  , PROG,     NOP, NOP, 18, 0, 0 );
+  // addSymboltableEntry(theSymboltable,"wert"     , INTEGER,  NOP, NOP,  0, 0, 0 );
+  // addSymboltableEntry(theSymboltable,"d"        , INTEGER,    NOP, NOP,  4, 0, 0 );
+  // addSymboltableEntry(theSymboltable,"H0"       , BOOL,     NOP, NOP,  8, 0, 0 );
+  // addSymboltableEntry(theSymboltable,"H1"       , BOOL,     NOP, NOP,  9, 0, 0 );
+  // addSymboltableEntry(theSymboltable,"H2"       , BOOL,     NOP, NOP, 10, 0, 0 );
+  // addSymboltableEntry(theSymboltable,"H3"       , BOOL,     NOP, NOP, 11, 0, 0 );
+  // addSymboltableEntry(theSymboltable,"H4"       , BOOL,     NOP, NOP, 12, 0, 0 );
+  // addSymboltableEntry(theSymboltable,"H5"       , BOOL,     NOP, NOP, 13, 0, 0 );
+  // addSymboltableEntry(theSymboltable,"H6"       , BOOL,     NOP, NOP, 14, 0, 0 );
+  // addSymboltableEntry(theSymboltable,"H7"       , BOOL,     NOP, NOP, 15, 0, 0 );
+  // addSymboltableEntry(theSymboltable,"H8"       , BOOL,     NOP, NOP, 16, 0, 0 );
+  // addSymboltableEntry(theSymboltable,"H9"       , BOOL,     NOP, NOP, 17, 0, 0 );
   
   // Write the symbol table to file
   FILE * outputFile;
@@ -46,7 +46,7 @@ void yyerror(char * str)
 }
 
 // This function adds a new entry to the symbol table
-void addSymboltableEntry (symtabEntry * Symboltable,
+void addSymboltableEntry (
               char * name,
               symtabEntryType type,
               symtabEntryType internalType,
@@ -78,7 +78,7 @@ void addSymboltableEntry (symtabEntry * Symboltable,
   else
   {
     //there is at least one entry in the Symboltable
-    symtabEntry * symtabHelp = Symboltable;
+    symtabEntry * symtabHelp = theSymboltable;
     while (symtabHelp->next)
     {
       //walks to the last entry of Symboltable
@@ -91,20 +91,29 @@ void addSymboltableEntry (symtabEntry * Symboltable,
 symtabEntry * findEntry( char * name){
 
 symtabEntry * symtabHelp = theSymboltable;
-    
-	do
-    {
+
+if(!symtabHelp){
+return 0;}
+
+	   if(strcmp(symtabHelp->name,name)==0){
+			return symtabHelp;}
+			
+	
+	 while (symtabHelp->next)
+		{
+		
+		  //walks through the Symboltable
+		  symtabHelp = symtabHelp->next;
+		
+		  if(strcmp(symtabHelp->name,name)==0){
+			return symtabHelp;}
+		}
+	
 
 	if(strcmp(symtabHelp->name,name)==0){
+
 	return symtabHelp;}
-	
-      //walks to the last entry of Symboltable
-      symtabHelp = symtabHelp->next;
-    }while(symtabHelp->next);
-	
-	if(strcmp(symtabHelp->name,name)==0){
-	return symtabHelp;}
-	
+
 	return 0;
 	
 }
@@ -167,7 +176,7 @@ void writeSymboltable (symtabEntry * Symboltable, FILE * outputFile){
     }else{
       fprintf(outputFile, "None \t");
     }
-    fprintf(outputFile, "%d \n",currentEntry->parameter);
+    fprintf(outputFile, "\t %d \n",currentEntry->parameter);
     
     fflush(outputFile);
     

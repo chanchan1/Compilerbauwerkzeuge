@@ -3,18 +3,12 @@ SYMBOLS
 
 Name                Type    Int_Typ Offset/Size    Line    Index1    Index2    Parent          Parameter
 -------------------------------------------------------------------------------------------------------
-questionmark        Func    Real              0       0         0         0 	None 	2 
-If_Demo             Prg     None              4      18         0         0 	None 	0 
-wert                Int     None              4       0         0         0 	None 	0 
-d                   Int     None              4       4         0         0 	None 	0 
-H0                  Bool    None              4       8         0         0 	None 	0 
-H1                  Bool    None              4       9         0         0 	None 	0 
-H2                  Bool    None              4      10         0         0 	None 	0 
-H3                  Bool    None              4      11         0         0 	None 	0 
-H4                  Bool    None              4      12         0         0 	None 	0 
-H5                  Bool    None              4      13         0         0 	None 	0 
-H6                  Bool    None              4      14         0         0 	None 	0 
-H7                  Bool    None              4      15         0         0 	None 	0 
-H8                  Bool    None              4      16         0         0 	None 	0 
-H9                  Bool    None              4      17         0         0 	None 	0 
+x                   Int     None              0       0         0         0 	None 		 1 
+y                   Int     None              0       0         0         0 	None 		 2 
+questionmark        Func    Real              0       0         0         0 	None 		 0 
+variable_1          Int     None              0       0         0         0 	None 		 0 
+variable_2          Int     None              0       0         0         0 	None 		 0 
+variable_3          Real    None              0       0         0         0 	None 		 0 
+main                Prg     Int               0       0         0         0 	None 		 0 
+result              Real    None              0       0         0         0 	None 		 0 
 

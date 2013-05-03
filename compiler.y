@@ -54,7 +54,7 @@ symtabEntryType type;
 }
 
 %type<integer> NUMBER FRACTIONAL_NUMBER number parameter_list
-%type<string> id ID  expression assignment 
+%type<string> id ID  expression assignment
 %type<type> var_type declaration return_value
 
 
@@ -69,18 +69,27 @@ programm
     ;
 
 function_declaration
-	: return_value  id  PARENTHESIS_OPEN  parameter_list  PARENTHESIS_CLOSE SEMICOLON {
+	: return_value  id part2 {
 	symtabEntryType type;
 	if($1==NOP){type=PROC;}
 		else{type=FUNC;}
-	addSymboltableEntry ( 0, $2,  type,  $1,
-              0, 0, 0, $4);}
+	addSymboltableEntry ($2,  type,  $1,
+              0, 0, 0, 0);
+	globaleVariable = findEntry($2);}
 	;
+	
+part2
+	:PARENTHESIS_OPEN  parameter_list  PARENTHESIS_CLOSE SEMICOLON{
+		globaleVariable =0;
+	}
+	;
+
 	
 function
     : return_value  id PARENTHESIS_OPEN  parameter_list  PARENTHESIS_CLOSE  function_body { 
 				
-				if(strcmp($2,"main")==0){addSymboltableEntry ( 0, $2,  PROG,  $1,
+				if(strcmp($2,"main")==0){
+				addSymboltableEntry ($2,  PROG,  $1,
               0, 0, 0, $4);
 			  }
 			  else {
@@ -99,8 +108,29 @@ function
 					}
 				}
 			  }
-			  globaleVariable=findEntry( $2);}
-    | return_value  id  PARENTHESIS_OPEN  VOID  PARENTHESIS_CLOSE  function_body
+			  globaleVariable =0;}
+    | return_value  id  PARENTHESIS_OPEN  VOID  PARENTHESIS_CLOSE  function_body{
+			
+			if(strcmp($2,"main")==0){
+				addSymboltableEntry ($2,  PROG,  $1,
+              0, 0, 0, 0);
+			  }
+			  else {
+			  symtabEntry * existing;
+			  
+				existing = findEntry( $2);
+
+			  if(!existing){
+					yyerror("No prior declaration!");
+					return 1;
+				}
+				else{
+					if(existing->parameter){
+					yyerror("Wrong number of parameters!");
+					return 1;
+					}
+				}
+			  }}
     ;
 	
 function_body
@@ -114,13 +144,54 @@ declaration_list
     ;
 
 declaration
-    : var_type  id
+    : var_type  id {
+	 symtabEntry * existing;
+			
+				existing = findEntry( $2);
+
+			  if(existing){
+					yyerror("Already declared!");
+					return 1;
+				}
+				else
+				{
+				addSymboltableEntry ($2,  $1, NOP,0, 0, 0, 0);
+			  }
+			  
+	}
     ;
 
 parameter_list
-    : var_type  id {$$=1}
-    | parameter_list COMMA  var_type  id {$$=$1+1}
-	| {$$=0}
+    : var_type  id {
+	
+			symtabEntry * existing;
+
+				existing = findEntry( $2);
+		
+			  if(existing){
+				break;
+				}
+				else
+				{
+				addSymboltableEntry ($2,  $1, NOP,0, 0, globaleVariable, 1);
+			  };
+			  $$=1}
+    | parameter_list COMMA  var_type  id {
+	
+				symtabEntry * existing;
+			
+				existing = findEntry( $4);
+
+			  if(existing){
+					break;
+				}
+				else
+				{
+				addSymboltableEntry ($4,  $3, NOP,0, 0, globaleVariable, $1+1);
+			  };
+			  $$=$1+1}
+	| {printf("3");;
+	$$=0}
     ;
 return_value
 	: var_type
